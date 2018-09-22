@@ -1,8 +1,18 @@
 package Omega;
 
-public class Main {
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+public class Main extends Application {
+
+	private Game game;
 
 	public static void main(String[] args) {
-		Game game = new Game();
+		launch(args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		this.game = new Game(primaryStage);
 	}
 }

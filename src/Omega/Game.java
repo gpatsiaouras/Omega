@@ -1,50 +1,77 @@
 package Omega;
 
-import java.util.Scanner;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-public class Game {
+public class Game implements EventHandler<MouseEvent> {
 
 	private Board board;
 	private Player player1;
 	private Player player2;
+	private Player playersTurn;
+	private Move currentMove;
 
-	public Game() {
-		this.board = new Board();
-		this.board.generateHexagonFromSize(3);
-		this.player1 = new Player();
-		this.player2 = new Player();
-		start();
+	public Game(Stage primaryStage) {
+		this.board = new Board(3);
+		this.board.generateHexagonsGrid();
+		this.player1 = new Player(1);
+		this.player2 = new Player(2);
+		playersTurn = player1;
+		startUI(primaryStage);
 	}
 
-	private void start() {
-		boolean gameIsOver = false;
-		Scanner reader = new Scanner(System.in);
-		boolean playerOneIsNext = true;
-		while (!gameIsOver) {
+	private void startUI(Stage primaryStage) {
+		Grid grid = new Grid();
 
-			board.printOnTerminal();
+		primaryStage.setTitle("Omega Board Game");
+		primaryStage.setScene(new Scene(grid.getGridOfHexagonsInPosition(this), 1280, 1000));
+		primaryStage.show();
 
-			System.out.print("Player " + (playerOneIsNext ? 1 : 2) + " put WHITE stone: ");
-			String[] whiteStone = reader.next().split(",");
-			System.out.print("Player " + (playerOneIsNext ? 1 : 2) + " put BLACK stone: ");
-			String[] blackStone = reader.next().split(",");
+	}
 
-			Move move = new Move();
-			move.setWhiteHexagon(board.getHexagonFromCoordinates(Integer.parseInt(whiteStone[0]), Integer.parseInt(whiteStone[1]), Integer.parseInt(whiteStone[2])));
-			move.setBlackHexagon(board.getHexagonFromCoordinates(Integer.parseInt(blackStone[0]), Integer.parseInt(blackStone[1]), Integer.parseInt(blackStone[2])));
-			move.setPlayer(playerOneIsNext ? player1 : player2);
-			board.addMoveAndMarkHexagon(move);
+	public Board getBoard() {
+		return board;
+	}
 
-			if (playerOneIsNext)
-				playerOneIsNext = false;
-			else
-				playerOneIsNext = true;
+	@Override
+	public void handle(MouseEvent event) {
+		Hexagon hexagon = (Hexagon) event.getTarget();
 
-			if (board.isFull()) {
-				gameIsOver = true;
-			}
+		//TODO do something when the game is over
+		if (board.isFull()) {
+			board.printMoveHistory();
+			return;
 		}
-		reader.close();
-		System.out.println("Game Over!");
+		if (hexagon.isCovered()) {
+			return;
+		}
+
+		if (currentMove == null) {
+			currentMove = new Move();
+			if (playersTurn == player1) {
+				hexagon.coverWithWhite();
+				currentMove.setWhiteHexagon(hexagon);
+			} else {
+				hexagon.coverWithBlack();
+				currentMove.setBlackHexagon(hexagon);
+			}
+			currentMove.setPlayer(playersTurn);
+			System.out.println("Player " + playersTurn.getPlayerNumber() + " selected " + hexagon.getX() + "," + hexagon.getY() + " as his white hexagon");
+		} else {
+			if (playersTurn == player1) {
+				hexagon.coverWithBlack();
+				currentMove.setBlackHexagon(hexagon);
+			} else {
+				hexagon.coverWithWhite();
+				currentMove.setWhiteHexagon(hexagon);
+			}
+
+			System.out.println("Player " + playersTurn.getPlayerNumber() + " selected " + hexagon.getX() + "," + hexagon.getY() + " as his black hexagon");
+			playersTurn = (playersTurn == player1 ? player2 : player1);
+			board.addMoveToBoard(currentMove);
+			currentMove = null;
+		}
 	}
 }

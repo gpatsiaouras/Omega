@@ -1,22 +1,23 @@
 package Omega;
 
-public class Hexagon {
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+
+public class Hexagon extends Polygon {
+
+	public static final int BLACK = 2;
+	public static final int WHITE = 1;
+	public static final int NOT_COVERED = -1;
 
 	private int x;
 	private int y;
 	private int z;
-	// -1 is empty, 0 is white, 1 is black
 	private int cover;
 
 	public Hexagon() {
-		this.cover = -1;
-	}
-
-	public Hexagon(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.cover = -1;
+		this.setStroke(Color.GRAY);
+		this.setStrokeWidth(3D);
+		this.cover = NOT_COVERED;
 	}
 
 	public int getX() {
@@ -48,26 +49,24 @@ public class Hexagon {
 	}
 
 	public boolean isCovered() {
-		return this.cover != -1;
+		return this.cover != NOT_COVERED;
 	}
 
 	public boolean isCoveredWithWhite() {
-		return this.cover == 0;
+		return this.cover == WHITE;
 	}
 
 	public boolean isCoveredWithBlack() {
-		return this.cover == 1;
-	}
-
-	public void cover(int code) {
-		this.cover = code;
+		return this.cover == BLACK;
 	}
 
 	public void coverWithWhite() {
-		this.cover = 0;
+		this.cover = WHITE;
+		this.setFill(Color.WHITESMOKE);
 	}
 
 	public void coverWithBlack() {
-		this.cover = 1;
+		this.cover = BLACK;
+		this.setFill(Color.BLACK);
 	}
 }

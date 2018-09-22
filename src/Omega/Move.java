@@ -9,12 +9,6 @@ public class Move {
 	public Move() {
 	}
 
-	public Move(Hexagon whiteHexagon, Hexagon blackHexagon, Player player) {
-		this.whiteHexagon = whiteHexagon;
-		this.blackHexagon = blackHexagon;
-		this.player = player;
-	}
-
 	public Hexagon getWhiteHexagon() {
 		return whiteHexagon;
 	}
