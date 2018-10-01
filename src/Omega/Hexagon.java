@@ -61,6 +61,10 @@ public class Hexagon extends Polygon {
 		return this.cover == BLACK;
 	}
 
+	public int getCover() {
+		return this.cover;
+	}
+
 	public void coverWithWhite() {
 		this.cover = WHITE;
 		this.setFill(Color.WHITESMOKE);
@@ -72,6 +76,10 @@ public class Hexagon extends Polygon {
 	}
 
 	public void highlight() {
-		this.setFill(Color.BLUE);
+		if (isCoveredWithWhite()) {
+			this.setFill(Color.LIGHTCYAN);
+		} else if (isCoveredWithBlack()) {
+			this.setFill(Color.DARKCYAN);
+		}
 	}
 }

@@ -2,7 +2,9 @@ package Omega;
 
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Game implements EventHandler<MouseEvent> {
@@ -15,7 +17,7 @@ public class Game implements EventHandler<MouseEvent> {
 	private Evaluator evaluator;
 
 	public Game(Stage primaryStage) {
-		this.board = new Board(7);
+		this.board = new Board(11);
 		this.board.generateHexagonsGrid();
 		this.player1 = new Player(1);
 		this.player2 = new Player(2);
@@ -26,9 +28,16 @@ public class Game implements EventHandler<MouseEvent> {
 
 	private void startUI(Stage primaryStage) {
 		Grid grid = new Grid();
+		VBox vBox = new VBox();
+
+		Button button = new Button();
+		button.setText("Evaluate Board");
+		button.setOnAction(event -> evaluator.evaluateBoard());
+
+		vBox.getChildren().addAll(grid.getGridOfHexagonsInPosition(this), button);
 
 		primaryStage.setTitle("Omega Board Game");
-		primaryStage.setScene(new Scene(grid.getGridOfHexagonsInPosition(this), 800, 800));
+		primaryStage.setScene(new Scene(vBox, 800, 800));
 		primaryStage.show();
 
 	}
@@ -51,31 +60,23 @@ public class Game implements EventHandler<MouseEvent> {
 		}
 
 		if (currentMove == null) {
+			hexagon.coverWithWhite();
+
 			currentMove = new Move();
-			if (playersTurn == player1) {
-				hexagon.coverWithWhite();
-				currentMove.setWhiteHexagon(hexagon);
-			} else {
-				hexagon.coverWithBlack();
-				currentMove.setBlackHexagon(hexagon);
-			}
+			currentMove.setWhiteHexagon(hexagon);
 			currentMove.setPlayer(playersTurn);
+
 			System.out.println("Player " + playersTurn.getPlayerNumber() + " selected " + hexagon.getX() + "," + hexagon.getY() + " as his white hexagon");
 		} else {
-			if (playersTurn == player1) {
-				hexagon.coverWithBlack();
-				currentMove.setBlackHexagon(hexagon);
-			} else {
-				hexagon.coverWithWhite();
-				currentMove.setWhiteHexagon(hexagon);
-			}
+			hexagon.coverWithBlack();
+
+			currentMove.setBlackHexagon(hexagon);
 
 			System.out.println("Player " + playersTurn.getPlayerNumber() + " selected " + hexagon.getX() + "," + hexagon.getY() + " as his black hexagon");
+
 			playersTurn = (playersTurn == player1 ? player2 : player1);
 			board.addMoveToBoard(currentMove);
 			currentMove = null;
 		}
-		//REMOVE THIS for now give the hexagon clicked
-		evaluator.evaluate(hexagon);
 	}
 }
