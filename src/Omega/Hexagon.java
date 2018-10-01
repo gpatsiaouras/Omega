@@ -8,6 +8,7 @@ public class Hexagon extends Polygon {
 	public static final int BLACK = 2;
 	public static final int WHITE = 1;
 	public static final int NOT_COVERED = -1;
+	private static final double DEFAULT_STROKE_WIDTH = 3D;
 
 	private int x;
 	private int y;
@@ -16,7 +17,7 @@ public class Hexagon extends Polygon {
 
 	public Hexagon() {
 		this.setStroke(Color.GRAY);
-		this.setStrokeWidth(3D);
+		this.setStrokeWidth(DEFAULT_STROKE_WIDTH);
 		this.cover = NOT_COVERED;
 	}
 
@@ -68,5 +69,9 @@ public class Hexagon extends Polygon {
 	public void coverWithBlack() {
 		this.cover = BLACK;
 		this.setFill(Color.BLACK);
+	}
+
+	public void highlight() {
+		this.setFill(Color.BLUE);
 	}
 }

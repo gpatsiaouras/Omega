@@ -1,7 +1,9 @@
 package Omega;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
 
@@ -9,11 +11,13 @@ public class Board {
 	private List<Move> moveHistory;
 	private int totalAvailableHexagons;
 	private int boardSize;
+	private Map<String, Hexagon> hexagonMap;
 
 	public Board(int boardSize) {
 		this.boardSize = boardSize;
 		this.hexagons = new ArrayList<>();
 		this.moveHistory = new ArrayList<>();
+		hexagonMap = new HashMap<>();
 	}
 
 	public void generateHexagonsGrid() {
@@ -45,16 +49,16 @@ public class Board {
 				offsetForSecondPart--;
 			}
 		}
-
 	}
 
 	private void addHexagonToList(int x, int y, int z) {
 		Hexagon hexagon = new Hexagon();
 		hexagon.setX(x);
-		hexagon.setZ(z);
-		hexagon.setY(y);
+		hexagon.setY(z);
+		hexagon.setZ(y);
 		hexagons.add(hexagon);
 		totalAvailableHexagons++;
+		hexagonMap.put(hexagon.getX() + "," + hexagon.getY() + "," + hexagon.getZ(), hexagon);
 	}
 
 	public boolean isFull() {
@@ -74,7 +78,12 @@ public class Board {
 		return hexagons;
 	}
 
+	public Map<String, Hexagon> getHexagonMap() {
+		return hexagonMap;
+	}
+
 	public void printMoveHistory() {
+		System.out.println("\n\n ============================= \n\n");
 		for (Move move : moveHistory) {
 			System.out.println("Player " + move.getPlayer().getPlayerNumber() +
 					" put a WHITE in (" + move.getWhiteHexagon().getX() + "," + move.getWhiteHexagon().getY() + ")" +

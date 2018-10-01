@@ -12,12 +12,14 @@ public class Game implements EventHandler<MouseEvent> {
 	private Player player2;
 	private Player playersTurn;
 	private Move currentMove;
+	private Evaluator evaluator;
 
 	public Game(Stage primaryStage) {
-		this.board = new Board(3);
+		this.board = new Board(7);
 		this.board.generateHexagonsGrid();
 		this.player1 = new Player(1);
 		this.player2 = new Player(2);
+		this.evaluator = new Evaluator(this.getBoard());
 		playersTurn = player1;
 		startUI(primaryStage);
 	}
@@ -26,7 +28,7 @@ public class Game implements EventHandler<MouseEvent> {
 		Grid grid = new Grid();
 
 		primaryStage.setTitle("Omega Board Game");
-		primaryStage.setScene(new Scene(grid.getGridOfHexagonsInPosition(this), 1280, 1000));
+		primaryStage.setScene(new Scene(grid.getGridOfHexagonsInPosition(this), 800, 800));
 		primaryStage.show();
 
 	}
@@ -73,5 +75,7 @@ public class Game implements EventHandler<MouseEvent> {
 			board.addMoveToBoard(currentMove);
 			currentMove = null;
 		}
+		//REMOVE THIS for now give the hexagon clicked
+		evaluator.evaluate(hexagon);
 	}
 }

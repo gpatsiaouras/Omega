@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 
 public class Grid {
 
+	public static final int BASE_SIZE = 10;
+
 	public Group getGridOfHexagonsInPosition(Game game) {
 		Group hexagonGroup = new Group();
 		int boardSize = game.getBoard().getBoardSize();
@@ -27,14 +29,13 @@ public class Grid {
 	}
 
 	private Double[] getSmallHexagonInPosition(int right, int top) {
-		int baseSize = 10;
 		return new Double[]{
-				(2.0 * baseSize) + (50 * right) + (25 * top), 0.0 + (50 * top),
-				(4.0 * baseSize) + (50 * right) + (25 * top), (2.0 * baseSize) + (50 * top),
-				(4.0 * baseSize) + (50 * right) + (25 * top), (4.0 * baseSize) + (50 * top),
-				(2.0 * baseSize) + (50 * right) + (25 * top), (6.0 * baseSize) + (50 * top),
-				0.0 + (50 * right) + (25 * top), (4.0 * baseSize) + (50 * top),
-				0.0 + (50 * right) + (25 * top), (2.0 * baseSize) + (50 * top),
+				BASE_SIZE * (2.0 + (5 * right) + (2.5 * top)), 0.0 + (5 * top * BASE_SIZE),
+				BASE_SIZE * (4.0 + (5 * right) + (2.5 * top)), BASE_SIZE * ( 2.0 + (5 * top)),
+				BASE_SIZE * (4.0 + (5 * right) + (2.5 * top)), BASE_SIZE * ( 4.0 + (5 * top)),
+				BASE_SIZE * (2.0 + (5 * right) + (2.5 * top)), BASE_SIZE * ( 6.0 + (5 * top)),
+				0.0 + BASE_SIZE * (5 * right + (2.5 * top)), BASE_SIZE * ( 4.0 + (5 * top)),
+				0.0 + BASE_SIZE * (5 * right + (2.5 * top)), BASE_SIZE * ( 2.0 + (5 * top)),
 		};
 	}
 }
