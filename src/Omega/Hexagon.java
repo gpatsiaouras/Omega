@@ -14,6 +14,8 @@ public class Hexagon extends Polygon {
 	private int y;
 	private int z;
 	private int cover;
+	private int parentId;
+	private int groupId;
 
 	public Hexagon() {
 		this.setStroke(Color.GRAY);
@@ -75,11 +77,23 @@ public class Hexagon extends Polygon {
 		this.setFill(Color.BLACK);
 	}
 
-	public void highlight() {
-		if (isCoveredWithWhite()) {
-			this.setFill(Color.LIGHTCYAN);
-		} else if (isCoveredWithBlack()) {
-			this.setFill(Color.DARKCYAN);
-		}
+	public boolean hasSameCoverWith(Hexagon hexagon) {
+		return this.getCover() == hexagon.getCover();
+	}
+
+	public int getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
+
+	public int getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
 	}
 }

@@ -1,7 +1,9 @@
 package Omega;
 
 import javafx.scene.Group;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class Grid {
 
@@ -21,6 +23,7 @@ public class Grid {
 			hexagon.setFill(Color.GREEN);
 
 			hexagon.setOnMouseClicked(game);
+
 			hexagonGroup.getChildren().add(hexagon);
 
 		}

@@ -1,7 +1,5 @@
 package Omega;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,44 +9,74 @@ public class Evaluator {
 			{-1,0,1},{1,0,-1},{-1,1,0},{0,1,-1},{1,-1,0},{0,-1,1}
 	};
 
-	private List<Hexagon> alreadyChecked;
-
 	private Board board;
+	private int[] parent;
+	private int[] size;
+	private Hexagon[] hexagons;
+	private int groups;
 
 	public Evaluator(Board board) {
 		this.board = board;
-	}
 
-	public void evaluateBoard() {
-		//Reset the List
-		alreadyChecked = new ArrayList<>();
-		List<Integer> whiteGroup = new ArrayList<>();
-		List<Integer> blackGroup = new ArrayList<>();
-		//TODO Trying to distinquise the groups
-		for (Hexagon hexagon : board.getHexagons()) {
+		groups = board.getTotalHexagons();
+		parent = new int[board.getTotalHexagons()];
+		size  = new int[board.getTotalHexagons()];
+		hexagons  = new Hexagon[board.getTotalHexagons()];
 
-			List<Hexagon> neighbors = getNeighbors(hexagon);
-			for (Hexagon neighbor : neighbors) {
-				if (hexagon.getCover() == neighbor.getCover() && neighbor.isCovered()) {
-
-//					if (neighbor.isCoveredWithBlack())
-//						blackGroup.add(ne)
-//					else
-//						whiteGroup.add(neighbor);
-
-					neighbor.highlight();
-					alreadyChecked.add(neighbor);
-				}
-			}
-			alreadyChecked.add(hexagon);
+		for (int i = 0; i < board.getHexagons().size(); i++) {
+			hexagons[i] = board.getHexagons().get(i);
+			parent[i] = i;
+			size[i] = 1;
 		}
 
-		System.out.println(alreadyChecked.size());
+		System.out.println();
+	}
+
+	private int find(int i) {
+		int p = parent[i];
+		if (i == p) {
+			return i;
+		}
+
+		return parent[i] = find(p);
+	}
+
+	private void union(int i, int j) {
+		int root1 = find(i);
+		int root2 = find(j);
+
+		if (root2 == root1) return;
+
+		if (size[root1] > size[root2]) {
+			parent[root2] = root1;
+			size[root1] += size[root2];
+		} else if (size[root2] > size[root1]) {
+			parent[root1] = root2;
+			size[root2] += size[root1];
+		} else {
+			parent[root2] = root1;
+			size[root1] += size[root2];
+		}
+
+		groups--;
+	}
+
+	private boolean connected(int p, int q) {
+		return find(p) == find(q);
+	}
+
+	public void evaluateBoard(Hexagon current) {
+		int positionCurrent = getPositionOfHexagon(current);
+		for (Hexagon neighbor : getNeighbors(current)) {
+			int positionNeighbor = getPositionOfHexagon(neighbor);
+			if (neighbor.hasSameCoverWith(current) && !connected(positionCurrent, positionNeighbor)) {
+				union(positionCurrent, positionNeighbor);
+			}
+		}
 	}
 
 	private List<Hexagon> getNeighbors(Hexagon current) {
 		List<Hexagon> neighbors = new ArrayList<>();
-
 		for (int[] neighbor : NEIGHBORS) {
 			String searchKey = (current.getX()+ neighbor[0]) + "," + (current.getY() + neighbor[1]) + "," + (current.getZ() + neighbor[2]);
 			if (hexagonExists(searchKey)) {
@@ -61,5 +89,41 @@ public class Evaluator {
 
 	private boolean hexagonExists(String searchKey) {
 		return board.getHexagonMap().containsKey(searchKey);
+	}
+
+	private int getPositionOfHexagon(Hexagon hexagon) {
+		for (int i = 0; i < hexagons.length; i++) {
+			if (hexagon == hexagons[i]) return i;
+		}
+		return -1;
+	}
+
+	public int getGroups() {
+		calculateScore();
+		return (groups - 1);
+	}
+
+	private void calculateScore() {
+
+		int scoreWhite = 1;
+		int scoreBlack = 1;
+
+		System.out.print("White Score: ");
+		for (int index = 0; index < parent.length; index++) {
+			if (parent[index] == index && hexagons[index].isCoveredWithWhite()) {
+				System.out.print(size[index] + "*");
+				scoreWhite = scoreWhite * size[index];
+			}
+		}
+		System.out.println(" = " + scoreWhite);
+		System.out.print("Black Score: ");
+		for (int index = 0; index < parent.length; index++) {
+			 if (parent[index] == index && hexagons[index].isCoveredWithBlack()) {
+				System.out.print(size[index] + "*");
+				scoreBlack = scoreBlack * size[index];
+			}
+		}
+		System.out.println("Score Black: " + scoreBlack);
+
 	}
 }

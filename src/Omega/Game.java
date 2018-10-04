@@ -17,7 +17,7 @@ public class Game implements EventHandler<MouseEvent> {
 	private Evaluator evaluator;
 
 	public Game(Stage primaryStage) {
-		this.board = new Board(11);
+		this.board = new Board(7);
 		this.board.generateHexagonsGrid();
 		this.player1 = new Player(1);
 		this.player2 = new Player(2);
@@ -30,14 +30,9 @@ public class Game implements EventHandler<MouseEvent> {
 		Grid grid = new Grid();
 		VBox vBox = new VBox();
 
-		Button button = new Button();
-		button.setText("Evaluate Board");
-		button.setOnAction(event -> evaluator.evaluateBoard());
-
-		vBox.getChildren().addAll(grid.getGridOfHexagonsInPosition(this), button);
-
+		vBox.getChildren().addAll(grid.getGridOfHexagonsInPosition(this));
 		primaryStage.setTitle("Omega Board Game");
-		primaryStage.setScene(new Scene(vBox, 800, 800));
+		primaryStage.setScene(new Scene(vBox, board.getBoardSize() * 60, board.getBoardSize() * 60));
 		primaryStage.show();
 
 	}
@@ -52,7 +47,8 @@ public class Game implements EventHandler<MouseEvent> {
 
 		//TODO do something when the game is over
 		if (board.isFull()) {
-			board.printMoveHistory();
+//			board.printMoveHistory();
+			System.out.println("Number of groups on board: " + evaluator.getGroups());
 			return;
 		}
 		if (hexagon.isCovered()) {
@@ -78,5 +74,7 @@ public class Game implements EventHandler<MouseEvent> {
 			board.addMoveToBoard(currentMove);
 			currentMove = null;
 		}
+
+		evaluator.evaluateBoard(hexagon);
 	}
 }

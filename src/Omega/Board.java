@@ -11,6 +11,7 @@ public class Board {
 	private List<Move> moveHistory;
 	private int totalAvailableHexagons;
 	private int boardSize;
+	private int totalHexagons;
 	private Map<String, Hexagon> hexagonMap;
 
 	public Board(int boardSize) {
@@ -58,6 +59,7 @@ public class Board {
 		hexagon.setZ(y);
 		hexagons.add(hexagon);
 		totalAvailableHexagons++;
+		totalHexagons++;
 		hexagonMap.put(hexagon.getX() + "," + hexagon.getY() + "," + hexagon.getZ(), hexagon);
 	}
 
@@ -72,6 +74,10 @@ public class Board {
 
 	public int getBoardSize() {
 		return boardSize;
+	}
+
+	public int getTotalHexagons() {
+		return totalHexagons;
 	}
 
 	public List<Hexagon> getHexagons() {
