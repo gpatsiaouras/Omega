@@ -1,7 +1,7 @@
 package Omega.player;
 
+import Omega.Move;
 import Omega.ui.Board;
-import Omega.ui.Hexagon;
 
 public class HumanPlayer extends Player {
 
@@ -10,7 +10,7 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	public Hexagon makeMove(Board board) {
+	public Move makeMove(Board board) {
 		return null;
 	}
 }

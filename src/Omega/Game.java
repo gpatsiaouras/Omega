@@ -59,30 +59,14 @@ public class Game implements EventHandler<MouseEvent> {
 		}
 	}
 
-	private void playMove(Hexagon currentlyPlayedHexagon) {
-		if (currentMove == null) {
-			currentlyPlayedHexagon.coverWithWhite();
+	private void playMove(Move currentMove) {
+		System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber()
+				+ " selected " + currentMove.getWhiteHexagon().getX() + "," + currentMove.getWhiteHexagon().getY() + " as white"
+				+ " selected " + currentMove.getBlackHexagon().getX() + "," + currentMove.getBlackHexagon().getY() + " as black");
 
-			currentMove = new Move();
-			currentMove.setWhiteHexagon(currentlyPlayedHexagon);
-			currentMove.setPlayer(currentPlayer);
-
-			System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber() + " selected " + currentlyPlayedHexagon.getX() + "," + currentlyPlayedHexagon.getY() + " as white");
-
-			evaluator.evaluateBoard(currentlyPlayedHexagon);
-		} else {
-			currentlyPlayedHexagon.coverWithBlack();
-
-			currentMove.setBlackHexagon(currentlyPlayedHexagon);
-
-			System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber() + " selected " + currentlyPlayedHexagon.getX() + "," + currentlyPlayedHexagon.getY() + " as black");
-
-			evaluator.evaluateBoard(currentlyPlayedHexagon);
-
-			swapPlayersTurn();
-			board.addMoveToBoard(currentMove);
-			currentMove = null;
-		}
+		board.addMoveToBoard(currentMove);
+		evaluator.evaluateBoard(currentMove);
+		swapPlayersTurn();
 
 		continueGame();
 	}
@@ -107,7 +91,17 @@ public class Game implements EventHandler<MouseEvent> {
 		Hexagon hexagon = (Hexagon) event.getTarget();
 
 		if (!hexagon.isCovered() && !board.isFull()) {
-			playMove(hexagon);
+			if (currentMove == null) {
+				hexagon.coverWithWhite();
+				currentMove = new Move();
+				currentMove.setWhiteHexagon(hexagon);
+				currentMove.setPlayer(currentPlayer);
+			} else {
+				hexagon.coverWithBlack();
+				currentMove.setBlackHexagon(hexagon);
+				playMove(currentMove);
+				currentMove = null;
+			}
 		}
 	}
 

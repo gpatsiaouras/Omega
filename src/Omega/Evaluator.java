@@ -69,7 +69,12 @@ public class Evaluator {
 		return find(p) == find(q);
 	}
 
-	public void evaluateBoard(Hexagon current) {
+	public void evaluateBoard(Move current) {
+		evaluateHexagon(current.getWhiteHexagon());
+		evaluateHexagon(current.getBlackHexagon());
+	}
+
+	private void evaluateHexagon(Hexagon current) {
 		int positionCurrent = getPositionOfHexagon(current);
 		for (Hexagon neighbor : getNeighbors(current)) {
 			int positionNeighbor = getPositionOfHexagon(neighbor);
