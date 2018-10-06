@@ -3,7 +3,9 @@ package Omega.ui;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class Hexagon extends Polygon {
+import java.io.Serializable;
+
+public class Hexagon extends Polygon implements Serializable {
 
 	public static final int BLACK = 2;
 	public static final int WHITE = 1;
@@ -75,6 +77,11 @@ public class Hexagon extends Polygon {
 	public void coverWithBlack() {
 		this.cover = BLACK;
 		this.setFill(Color.BLACK);
+	}
+
+	public void uncover() {
+		this.cover = NOT_COVERED;
+		this.setFill(Color.GREEN);
 	}
 
 	public boolean hasSameCoverWith(Hexagon hexagon) {

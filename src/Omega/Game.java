@@ -8,6 +8,7 @@ import Omega.ui.Grid;
 import Omega.ui.Hexagon;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -40,7 +41,11 @@ public class Game implements EventHandler<MouseEvent> {
 		Grid grid = new Grid();
 		VBox vBox = new VBox();
 
-		vBox.getChildren().addAll(grid.getGridOfHexagonsInPosition(this));
+		Button undoButton = new Button();
+		undoButton.setText("Undo last move");
+		undoButton.setOnAction(event -> undoLastMove());
+
+		vBox.getChildren().addAll(grid.getGridOfHexagonsInPosition(this), undoButton);
 		primaryStage.setTitle("Omega Board Game");
 		primaryStage.setScene(new Scene(vBox, board.getBoardSize() * 60, board.getBoardSize() * 60));
 		primaryStage.show();
@@ -62,7 +67,7 @@ public class Game implements EventHandler<MouseEvent> {
 			currentMove.setWhiteHexagon(currentlyPlayedHexagon);
 			currentMove.setPlayer(currentPlayer);
 
-			System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber() + " selected " + currentlyPlayedHexagon.getX() + "," + currentlyPlayedHexagon.getY() + " as his white currentlyPlayedHexagon");
+			System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber() + " selected " + currentlyPlayedHexagon.getX() + "," + currentlyPlayedHexagon.getY() + " as white");
 
 			evaluator.evaluateBoard(currentlyPlayedHexagon);
 		} else {
@@ -70,7 +75,7 @@ public class Game implements EventHandler<MouseEvent> {
 
 			currentMove.setBlackHexagon(currentlyPlayedHexagon);
 
-			System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber() + " selected " + currentlyPlayedHexagon.getX() + "," + currentlyPlayedHexagon.getY() + " as his black currentlyPlayedHexagon");
+			System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber() + " selected " + currentlyPlayedHexagon.getX() + "," + currentlyPlayedHexagon.getY() + " as black");
 
 			evaluator.evaluateBoard(currentlyPlayedHexagon);
 
@@ -80,6 +85,17 @@ public class Game implements EventHandler<MouseEvent> {
 		}
 
 		continueGame();
+	}
+
+	private void undoLastMove() {
+		//Do not allow undo if a player is in the middle of a move
+		if (currentMove == null) {
+			Move lastMove = board.getMoveHistory().get(board.getMoveHistory().size() - 1);
+			board.removeMoveFromBoard(lastMove);
+			System.out.println("Undid last move");
+			swapPlayersTurn();
+			continueGame();
+		}
 	}
 
 	private void swapPlayersTurn() {

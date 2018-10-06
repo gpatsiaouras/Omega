@@ -74,6 +74,13 @@ public class Board {
 		totalAvailableHexagons = totalAvailableHexagons - 2;
 	}
 
+	public void removeMoveFromBoard(Move move) {
+		move.getWhiteHexagon().uncover();
+		move.getBlackHexagon().uncover();
+		moveHistory.remove(move);
+		totalAvailableHexagons = totalAvailableHexagons + 2;
+	}
+
 	public int getBoardSize() {
 		return boardSize;
 	}
@@ -90,12 +97,16 @@ public class Board {
 		return hexagonMap;
 	}
 
-	public void printMoveHistory() {
-		System.out.println("\n\n ============================= \n\n");
-		for (Move move : moveHistory) {
-			System.out.println("HumanPlayer " + move.getPlayer().getNumber() +
-					" put a WHITE in (" + move.getWhiteHexagon().getX() + "," + move.getWhiteHexagon().getY() + ")" +
-					" and a BLACK in (" + move.getBlackHexagon().getX() + "," + move.getBlackHexagon().getY() + ")");
-		}
+	public List<Move> getMoveHistory() {
+		return moveHistory;
+	}
+
+	public void setMoveHistory(List<Move> moveHistory) {
+		this.moveHistory = moveHistory;
+	}
+
+	//TODO Implement this method
+	public List<Move> getNextAvailableMoves() {
+		return null;
 	}
 }

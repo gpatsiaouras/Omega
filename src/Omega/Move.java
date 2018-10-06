@@ -3,7 +3,9 @@ package Omega;
 import Omega.player.Player;
 import Omega.ui.Hexagon;
 
-public class Move {
+import java.io.Serializable;
+
+public class Move implements Serializable {
 
 	private Hexagon whiteHexagon;
 	private Hexagon blackHexagon;
