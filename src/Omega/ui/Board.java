@@ -1,4 +1,6 @@
-package Omega;
+package Omega.ui;
+
+import Omega.Move;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class Board {
 	public void generateHexagonsGrid() {
 
 		int midOfAxes = 0;
-		int startOfAxis = - boardSize / 2;
+		int startOfAxis = -boardSize / 2;
 		int endOfAxis = boardSize / 2;
 
 		int offsetForFirstPart = 0;
@@ -35,7 +37,7 @@ public class Board {
 				int howManyToPutInTheRow = (boardSize / 2) + 1 + offsetForFirstPart;
 				for (int incr = 0; incr < howManyToPutInTheRow; incr++) {
 					int y = endOfAxis - incr;
-					int x = -z -y;
+					int x = -z - y;
 					addHexagonToList(x, y, z);
 				}
 
@@ -64,7 +66,7 @@ public class Board {
 	}
 
 	public boolean isFull() {
-		return totalAvailableHexagons < 2;
+		return totalAvailableHexagons < 4;
 	}
 
 	public void addMoveToBoard(Move move) {
@@ -91,7 +93,7 @@ public class Board {
 	public void printMoveHistory() {
 		System.out.println("\n\n ============================= \n\n");
 		for (Move move : moveHistory) {
-			System.out.println("Player " + move.getPlayer().getPlayerNumber() +
+			System.out.println("HumanPlayer " + move.getPlayer().getNumber() +
 					" put a WHITE in (" + move.getWhiteHexagon().getX() + "," + move.getWhiteHexagon().getY() + ")" +
 					" and a BLACK in (" + move.getBlackHexagon().getX() + "," + move.getBlackHexagon().getY() + ")");
 		}

@@ -1,4 +1,4 @@
-package Omega;
+package Omega.ui;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;

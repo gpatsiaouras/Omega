@@ -1,5 +1,8 @@
 package Omega;
 
+import Omega.player.Player;
+import Omega.ui.Hexagon;
+
 public class Move {
 
 	private Hexagon whiteHexagon;

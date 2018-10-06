@@ -1,12 +1,15 @@
 package Omega;
 
+import Omega.ui.Board;
+import Omega.ui.Hexagon;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Evaluator {
 
 	private static final int[][] NEIGHBORS = {
-			{-1,0,1},{1,0,-1},{-1,1,0},{0,1,-1},{1,-1,0},{0,-1,1}
+			{-1, 0, 1}, {1, 0, -1}, {-1, 1, 0}, {0, 1, -1}, {1, -1, 0}, {0, -1, 1}
 	};
 
 	private Board board;
@@ -20,8 +23,8 @@ public class Evaluator {
 
 		groups = board.getTotalHexagons();
 		parent = new int[board.getTotalHexagons()];
-		size  = new int[board.getTotalHexagons()];
-		hexagons  = new Hexagon[board.getTotalHexagons()];
+		size = new int[board.getTotalHexagons()];
+		hexagons = new Hexagon[board.getTotalHexagons()];
 
 		for (int i = 0; i < board.getHexagons().size(); i++) {
 			hexagons[i] = board.getHexagons().get(i);
@@ -47,6 +50,7 @@ public class Evaluator {
 
 		if (root2 == root1) return;
 
+		//TODO Remove one if is useless
 		if (size[root1] > size[root2]) {
 			parent[root2] = root1;
 			size[root1] += size[root2];
@@ -78,7 +82,7 @@ public class Evaluator {
 	private List<Hexagon> getNeighbors(Hexagon current) {
 		List<Hexagon> neighbors = new ArrayList<>();
 		for (int[] neighbor : NEIGHBORS) {
-			String searchKey = (current.getX()+ neighbor[0]) + "," + (current.getY() + neighbor[1]) + "," + (current.getZ() + neighbor[2]);
+			String searchKey = (current.getX() + neighbor[0]) + "," + (current.getY() + neighbor[1]) + "," + (current.getZ() + neighbor[2]);
 			if (hexagonExists(searchKey)) {
 				neighbors.add(board.getHexagonMap().get(searchKey));
 			}
@@ -99,11 +103,11 @@ public class Evaluator {
 	}
 
 	public int getGroups() {
-		calculateScore();
 		return (groups - 1);
 	}
 
-	private void calculateScore() {
+	public int[] calculateScore() {
+		int[] scores = new int[2];
 
 		int scoreWhite = 1;
 		int scoreBlack = 1;
@@ -118,12 +122,16 @@ public class Evaluator {
 		System.out.println(" = " + scoreWhite);
 		System.out.print("Black Score: ");
 		for (int index = 0; index < parent.length; index++) {
-			 if (parent[index] == index && hexagons[index].isCoveredWithBlack()) {
+			if (parent[index] == index && hexagons[index].isCoveredWithBlack()) {
 				System.out.print(size[index] + "*");
 				scoreBlack = scoreBlack * size[index];
 			}
 		}
 		System.out.println("Score Black: " + scoreBlack);
 
+		scores[0] = scoreWhite;
+		scores[1] = scoreBlack;
+
+		return scores;
 	}
 }
