@@ -19,6 +19,12 @@ public class AIPlayer extends Player {
 
 	@Override
 	public Move makeMove(Board board) {
+		return getDummyMove(board);
+//		Move move = negaMax(board, 3, alpha, beta);
+//		return move;
+	}
+
+	private Move getDummyMove(Board board) {
 		List<Hexagon> freeHexagons = board.getHexagons().stream()
 				.filter(hexagon -> !hexagon.isCovered())
 				.collect(Collectors.toList());
@@ -34,31 +40,29 @@ public class AIPlayer extends Player {
 		blackHexagon.coverWithBlack();
 
 		return move;
-//		Move move = negaMax(board, 3, alpha, beta);
-//		return move;
 	}
 
-//	private Move negaMax(Board board, int depth, long alpha, long beta) {
-//		List<Move> nextMoves = board.getNextAvailableMoves();
-//
-//		long score = -Long.MAX_VALUE;
-//
-//		if (nextMoves.isEmpty() || depth == 0) {
-//			score = evaluate();
-//		} else {
-//			for (Move nextMove : nextMoves) {
-//				Hexagon value = negaMax(board, depth - 1, -beta, -alpha);
-//
-//				if (value > score) score = value;
-//				if (score > alpha) alpha = score;
-//				if (score >= beta) break;
-//			}
-//		}
-//
-//		return score;
-//	}
+	private long negaMax(Board board, int depth, long alpha, long beta) {
+		List<Move> nextMoves = board.getNextAvailableMoves();
+
+		long score = -Long.MAX_VALUE;
+
+		if (nextMoves.isEmpty() || depth == 0) {
+			score = evaluate();
+		} else {
+			for (Move nextMove : nextMoves) {
+				long value = negaMax(board, depth - 1, -beta, -alpha);
+
+				if (value > score) score = value;
+				if (score > alpha) alpha = score;
+				if (score >= beta) break;
+			}
+		}
+
+		return score;
+	}
 
 	private int evaluate() {
-		return 0;
+		return new Random().nextInt(6);
 	}
 }

@@ -25,10 +25,10 @@ public class Game implements EventHandler<MouseEvent> {
 	private Evaluator evaluator;
 
 	public Game(Stage primaryStage) {
-		this.board = new Board(7);
+		this.board = new Board(13);
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new HumanPlayer(1, "Juanita");
+		this.player1 = new AIPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -106,7 +106,8 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void gameOver() {
-		int[] scores = evaluator.calculateScore();
+		Score score =  evaluator.calculateScore();
+		score.printScores();
 		System.out.println("Number of groups on board: " + evaluator.getGroups());
 	}
 

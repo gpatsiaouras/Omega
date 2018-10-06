@@ -66,6 +66,7 @@ public class Board {
 	}
 
 	public boolean isFull() {
+		//TODO Sometimes it ends with less than 4. It depends on the total of hexagons on the board
 		return totalAvailableHexagons < 4;
 	}
 

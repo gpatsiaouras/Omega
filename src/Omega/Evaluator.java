@@ -111,32 +111,24 @@ public class Evaluator {
 		return (groups - 1);
 	}
 
-	public int[] calculateScore() {
-		int[] scores = new int[2];
+	public Score calculateScore() {
+		Score score = new Score();
 
-		int scoreWhite = 1;
-		int scoreBlack = 1;
+		score.setWhiteScore(1);
+		score.setBlackScore(1);
 
-		System.out.print("White Score: ");
 		for (int index = 0; index < parent.length; index++) {
-			if (parent[index] == index && hexagons[index].isCoveredWithWhite()) {
-				System.out.print(size[index] + "*");
-				scoreWhite = scoreWhite * size[index];
+			if (parent[index] == index) {
+				if (hexagons[index].isCoveredWithWhite()) {
+					score.getWhiteScoreHistory().add(size[index]);
+					score.setWhiteScore(score.getWhiteScore() * size[index]);
+				} else if (hexagons[index].isCoveredWithBlack()) {
+					score.getBlackScoreHistory().add(size[index]);
+					score.setBlackScore(score.getBlackScore() * size[index]);
+				}
 			}
 		}
-		System.out.println(" = " + scoreWhite);
-		System.out.print("Black Score: ");
-		for (int index = 0; index < parent.length; index++) {
-			if (parent[index] == index && hexagons[index].isCoveredWithBlack()) {
-				System.out.print(size[index] + "*");
-				scoreBlack = scoreBlack * size[index];
-			}
-		}
-		System.out.println("Score Black: " + scoreBlack);
 
-		scores[0] = scoreWhite;
-		scores[1] = scoreBlack;
-
-		return scores;
+		return score;
 	}
 }
