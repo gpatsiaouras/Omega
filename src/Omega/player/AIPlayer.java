@@ -19,8 +19,8 @@ public class AIPlayer extends Player {
 
 	@Override
 	public Move makeMove(Board board) {
+//		long bestScoreAchieved = negaMax(board, 3, alpha, beta);
 		return getDummyMove(board);
-//		Move move = negaMax(board, 3, alpha, beta);
 //		return move;
 	}
 

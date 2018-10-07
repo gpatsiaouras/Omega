@@ -1,8 +1,6 @@
 package Omega;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -15,6 +13,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		this.game = new Game(primaryStage);
+
+		this.game = new Game(primaryStage, getParameters());
 	}
 }

@@ -6,6 +6,7 @@ import Omega.player.Player;
 import Omega.ui.Board;
 import Omega.ui.Grid;
 import Omega.ui.Hexagon;
+import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,8 +25,14 @@ public class Game implements EventHandler<MouseEvent> {
 	private Move currentMove;
 	private Evaluator evaluator;
 
-	public Game(Stage primaryStage) {
-		this.board = new Board(13);
+	public Game(Stage primaryStage, Application.Parameters parameters) {
+		int boardSize;
+		if (parameters.getRaw().size() > 0) {
+			boardSize = Integer.parseInt(parameters.getRaw().get(0));
+		} else {
+			boardSize = 11;
+		}
+		this.board = new Board(boardSize);
 		this.board.generateHexagonsGrid();
 
 		this.player1 = new AIPlayer(1, "Juanita");
