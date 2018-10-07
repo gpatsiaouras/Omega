@@ -1,5 +1,6 @@
 package Omega.player;
 
+import Omega.Game;
 import Omega.Move;
 import Omega.ui.Board;
 import Omega.ui.Hexagon;
@@ -42,5 +43,5 @@ public abstract class Player {
 		this.type = type;
 	}
 
-	public abstract Move makeMove(Board board);
+	public abstract Move makeMove(Game game);
 }

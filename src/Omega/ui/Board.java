@@ -14,6 +14,7 @@ public class Board {
 	private int totalAvailableHexagons;
 	private int boardSize;
 	private int totalHexagons;
+	private int iterations;
 	private Map<String, Hexagon> hexagonMap;
 
 	public Board(int boardSize) {
@@ -86,6 +87,14 @@ public class Board {
 		return boardSize;
 	}
 
+	public int getIterations() {
+		return iterations;
+	}
+
+	public void incrementIterations() {
+		this.iterations++;
+	}
+
 	public int getTotalHexagons() {
 		return totalHexagons;
 	}
@@ -106,8 +115,22 @@ public class Board {
 		this.moveHistory = moveHistory;
 	}
 
-	//TODO Implement this method
 	public List<Move> getNextAvailableMoves() {
-		return null;
+		List<Move> nextAvailableMoves = new ArrayList<>();
+
+		for (Hexagon hexagon : hexagons) {
+			if (!hexagon.isCovered()) {
+				for (Hexagon insideHexagon : hexagons) {
+					if (!insideHexagon.isCovered() && insideHexagon != hexagon) {
+						Move move = new Move();
+						move.setWhiteHexagon(hexagon);
+						move.setBlackHexagon(insideHexagon);
+						nextAvailableMoves.add(move);
+					}
+				}
+			}
+		}
+
+		return nextAvailableMoves;
 	}
 }

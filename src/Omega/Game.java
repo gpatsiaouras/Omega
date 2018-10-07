@@ -35,7 +35,7 @@ public class Game implements EventHandler<MouseEvent> {
 		this.board = new Board(boardSize);
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new AIPlayer(1, "Juanita");
+		this.player1 = new HumanPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -60,16 +60,17 @@ public class Game implements EventHandler<MouseEvent> {
 
 	private void continueGame() {
 		if (!board.isFull() && currentPlayer instanceof AIPlayer) {
-			playMove(currentPlayer.makeMove(board));
+			playMove(currentPlayer.makeMove(this));
 		} else if (board.isFull()) {
 			gameOver();
 		}
 	}
 
-	private void playMove(Move currentMove) {
-		System.out.println(currentPlayer.getType() + " " + currentPlayer.getName() + " " + currentPlayer.getNumber()
-				+ " selected " + currentMove.getWhiteHexagon().getX() + "," + currentMove.getWhiteHexagon().getY() + " as white"
-				+ " selected " + currentMove.getBlackHexagon().getX() + "," + currentMove.getBlackHexagon().getY() + " as black");
+	public void playMove(Move currentMove) {
+		board.incrementIterations();
+		System.out.println(board.getIterations() + ":\t" + currentPlayer.getType() + " " + currentPlayer.getName() + "\t" + currentPlayer.getNumber()
+				+ " selected White:" + currentMove.getWhiteHexagon().getX() + "," + currentMove.getWhiteHexagon().getY()
+				+ " \tBlack: " + currentMove.getBlackHexagon().getX() + "," + currentMove.getBlackHexagon().getY());
 
 		board.addMoveToBoard(currentMove);
 		evaluator.evaluateBoard(currentMove);
@@ -78,7 +79,7 @@ public class Game implements EventHandler<MouseEvent> {
 		continueGame();
 	}
 
-	private void undoLastMove() {
+	public void undoLastMove() {
 		//Do not allow undo if a player is in the middle of a move
 		if (currentMove == null) {
 			Move lastMove = board.getMoveHistory().get(board.getMoveHistory().size() - 1);

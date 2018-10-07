@@ -1,5 +1,6 @@
 package Omega.player;
 
+import Omega.Game;
 import Omega.Move;
 import Omega.ui.Board;
 
@@ -10,7 +11,7 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	public Move makeMove(Board board) {
+	public Move makeMove(Game game) {
 		return null;
 	}
 }
