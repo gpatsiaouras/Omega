@@ -3,9 +3,7 @@ package Omega.ui;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-import java.io.Serializable;
-
-public class Hexagon extends Polygon implements Serializable {
+public class Hexagon extends Polygon {
 
 	public static final int BLACK = 2;
 	public static final int WHITE = 1;
@@ -16,8 +14,6 @@ public class Hexagon extends Polygon implements Serializable {
 	private int y;
 	private int z;
 	private int cover;
-	private int parentId;
-	private int groupId;
 
 	public Hexagon() {
 		this.setStroke(Color.GRAY);
@@ -49,6 +45,14 @@ public class Hexagon extends Polygon implements Serializable {
 		this.z = z;
 	}
 
+	public int getCover() {
+		return this.cover;
+	}
+
+	public void setCover(int cover) {
+		this.cover = cover;
+	}
+
 	public boolean matchesCoordinates(int regX, int regY, int regZ) {
 		return this.x == regX && this.y == regY && this.z == regZ;
 	}
@@ -63,10 +67,6 @@ public class Hexagon extends Polygon implements Serializable {
 
 	public boolean isCoveredWithBlack() {
 		return this.cover == BLACK;
-	}
-
-	public int getCover() {
-		return this.cover;
 	}
 
 	public void coverWithWhite() {
@@ -86,21 +86,5 @@ public class Hexagon extends Polygon implements Serializable {
 
 	public boolean hasSameCoverWith(Hexagon hexagon) {
 		return this.getCover() == hexagon.getCover();
-	}
-
-	public int getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
-	}
-
-	public int getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
 	}
 }

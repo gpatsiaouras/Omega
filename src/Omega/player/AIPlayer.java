@@ -20,9 +20,8 @@ public class AIPlayer extends Player {
 
 	@Override
 	public Move makeMove(Game game) {
-		long bestScoreAchieved = negaMax(game, 10, alpha, beta);
+//		long bestScoreAchieved = negaMax(newBoard, 10, alpha, beta);
 		return getDummyMove(game);
-//		return move;
 	}
 
 	private Move getDummyMove(Game game) {
@@ -44,8 +43,8 @@ public class AIPlayer extends Player {
 	}
 
 	//TODO CHANGE TO WORK WITH LIST OF MOVES INSTEAD 
-	private long negaMax(Game game, int depth, long alpha, long beta) {
-		List<Move> nextMoves = game.getBoard().getNextAvailableMoves();
+	private long negaMax(Board board, int depth, long alpha, long beta) {
+		List<Move> nextMoves = board.getNextAvailableMoves();
 
 		long score = -Long.MAX_VALUE;
 
@@ -53,15 +52,13 @@ public class AIPlayer extends Player {
 			score = evaluate();
 		} else {
 			for (Move nextMove : nextMoves) {
-//				game.playMove(nextMove);
-
-				long value = negaMax(game, depth - 1, -beta, -alpha);
+				//Perform move
+				long value = negaMax(board, depth - 1, -beta, -alpha);
 
 				if (value > score) score = value;
 				if (score > alpha) alpha = score;
 				if (score >= beta) break;
 
-				game.undoLastMove();
 			}
 		}
 

@@ -35,7 +35,7 @@ public class Game implements EventHandler<MouseEvent> {
 		this.board = new Board(boardSize);
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new HumanPlayer(1, "Juanita");
+		this.player1 = new AIPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 

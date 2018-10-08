@@ -2,8 +2,6 @@ package Omega.player;
 
 import Omega.Game;
 import Omega.Move;
-import Omega.ui.Board;
-import Omega.ui.Hexagon;
 
 public abstract class Player {
 	private int number;
