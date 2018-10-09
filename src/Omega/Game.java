@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -77,7 +78,10 @@ public class Game implements EventHandler<MouseEvent> {
 		moveList.setItems(observableList);
 		moveList.setEditable(false);
 
-		rootBox.getChildren().addAll(menuBar, buttonsBox, separator, stackPane, separator2, moveList);
+		Text copyright = new Text();
+		copyright.setText("All rights Reserved 2018. Giorgos Patsiaouras");
+
+		rootBox.getChildren().addAll(menuBar, buttonsBox, separator, stackPane, separator2, moveList, copyright);
 		rootBox.setSpacing(20);
 
 		primaryStage.setTitle("Omega Board Game");
