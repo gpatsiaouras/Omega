@@ -37,4 +37,11 @@ public class Move implements Serializable {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+
+	@Override
+	public String toString() {
+		return player.getType() + " " + player.getName() +
+				": white;" + whiteHexagon.getX() + "," + whiteHexagon.getY() +
+				" black;" + blackHexagon.getX() + "," + blackHexagon.getY();
+	}
 }

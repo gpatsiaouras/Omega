@@ -6,13 +6,24 @@ import Omega.player.Player;
 import Omega.ui.Board;
 import Omega.ui.Grid;
 import Omega.ui.Hexagon;
-import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.List;
+import java.util.Observable;
+
+import static javafx.application.Platform.exit;
 
 public class Game implements EventHandler<MouseEvent> {
 
@@ -25,17 +36,13 @@ public class Game implements EventHandler<MouseEvent> {
 	private Move currentMove;
 	private Evaluator evaluator;
 
-	public Game(Stage primaryStage, Application.Parameters parameters) {
-		int boardSize;
-		if (parameters.getRaw().size() > 0) {
-			boardSize = Integer.parseInt(parameters.getRaw().get(0));
-		} else {
-			boardSize = 11;
-		}
-		this.board = new Board(boardSize);
+	private ObservableList<Move> observableList;
+
+	public Game(Stage primaryStage) {
+		this.board = new Board(7);
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new AIPlayer(1, "Juanita");
+		this.player1 = new HumanPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -46,15 +53,35 @@ public class Game implements EventHandler<MouseEvent> {
 
 	private void startUI(Stage primaryStage) {
 		Grid grid = new Grid();
-		VBox vBox = new VBox();
+
+		VBox rootBox = new VBox();
+		HBox buttonsBox = new HBox();
+
+		MenuBar menuBar = getMenuBar();
 
 		Button undoButton = new Button();
 		undoButton.setText("Undo last move");
 		undoButton.setOnAction(event -> undoLastMove());
 
-		vBox.getChildren().addAll(grid.getGridOfHexagonsInPosition(this), undoButton);
+		Separator separator = new Separator(Orientation.HORIZONTAL);
+		Separator separator2 = new Separator(Orientation.HORIZONTAL);
+
+		buttonsBox.getChildren().add(undoButton);
+
+		StackPane stackPane = new StackPane();
+		stackPane.setAlignment(Pos.CENTER);
+		stackPane.getChildren().add(grid.getGridOfHexagonsInPosition(this));
+
+		ListView<Move> moveList = new ListView<>();
+		observableList = FXCollections.observableArrayList();
+		moveList.setItems(observableList);
+		moveList.setEditable(false);
+
+		rootBox.getChildren().addAll(menuBar, buttonsBox, separator, stackPane, separator2, moveList);
+		rootBox.setSpacing(20);
+
 		primaryStage.setTitle("Omega Board Game");
-		primaryStage.setScene(new Scene(vBox, board.getBoardSize() * 60, board.getBoardSize() * 60));
+		primaryStage.setScene(new Scene(rootBox, board.getBoardSize() * 100, board.getBoardSize() * 100));
 		primaryStage.show();
 	}
 
@@ -68,10 +95,8 @@ public class Game implements EventHandler<MouseEvent> {
 
 	public void playMove(Move currentMove) {
 		board.incrementIterations();
-		System.out.println(board.getIterations() + ":\t" + currentPlayer.getType() + " " + currentPlayer.getName() + "\t" + currentPlayer.getNumber()
-				+ " selected White:" + currentMove.getWhiteHexagon().getX() + "," + currentMove.getWhiteHexagon().getY()
-				+ " \tBlack: " + currentMove.getBlackHexagon().getX() + "," + currentMove.getBlackHexagon().getY());
-
+		System.out.println(board.getIterations() + ":\t" + currentMove.toString());
+		observableList.add(currentMove);
 		board.addMoveToBoard(currentMove);
 		evaluator.evaluateBoard(currentMove);
 		swapPlayersTurn();
@@ -85,6 +110,7 @@ public class Game implements EventHandler<MouseEvent> {
 			Move lastMove = board.getMoveHistory().get(board.getMoveHistory().size() - 1);
 			board.removeMoveFromBoard(lastMove);
 			System.out.println("Undid last move");
+			observableList.remove(observableList.size() - 1);
 			swapPlayersTurn();
 			continueGame();
 		}
@@ -121,5 +147,18 @@ public class Game implements EventHandler<MouseEvent> {
 
 	public Board getBoard() {
 		return board;
+	}
+
+	private MenuBar getMenuBar() {
+		MenuBar menuBar = new MenuBar();
+		Menu menuFile = new Menu("File");
+		MenuItem newGame = new MenuItem("New Game");
+		MenuItem exitGame = new MenuItem("Exit");
+		exitGame.setOnAction(event -> exit());
+		menuFile.getItems().addAll(newGame, exitGame);
+		Menu menuEdit = new Menu("Edit");
+
+		menuBar.getMenus().addAll(menuFile, menuEdit);
+		return menuBar;
 	}
 }

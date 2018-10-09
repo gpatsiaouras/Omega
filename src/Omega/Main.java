@@ -14,6 +14,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		this.game = new Game(primaryStage, getParameters());
+		this.game = new Game(primaryStage);
 	}
 }
