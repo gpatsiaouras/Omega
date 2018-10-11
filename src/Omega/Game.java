@@ -18,11 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-import java.util.List;
-import java.util.Observable;
 
 import static javafx.application.Platform.exit;
 
@@ -85,7 +81,7 @@ public class Game implements EventHandler<MouseEvent> {
 		rootBox.setSpacing(20);
 
 		primaryStage.setTitle("Omega Board Game");
-		primaryStage.setScene(new Scene(rootBox, board.getBoardSize() * 100, board.getBoardSize() * 100));
+		primaryStage.setScene(new Scene(rootBox, board.getBoardSize() * 120, board.getBoardSize() * 100));
 		primaryStage.show();
 	}
 
