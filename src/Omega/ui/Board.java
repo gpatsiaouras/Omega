@@ -115,22 +115,13 @@ public class Board {
 		this.moveHistory = moveHistory;
 	}
 
-	public List<Move> getNextAvailableMoves() {
-		List<Move> nextAvailableMoves = new ArrayList<>();
 
-		for (Hexagon hexagon : hexagons) {
-			if (!hexagon.isCovered()) {
-				for (Hexagon insideHexagon : hexagons) {
-					if (!insideHexagon.isCovered() && insideHexagon != hexagon) {
-						Move move = new Move();
-						move.setWhiteHexagon(hexagon);
-						move.setBlackHexagon(insideHexagon);
-						nextAvailableMoves.add(move);
-					}
-				}
-			}
+	public void resetBoard() {
+		for (Hexagon hexagon : getHexagons()) {
+			hexagon.uncover();
 		}
-
-		return nextAvailableMoves;
+		this.totalAvailableHexagons = this.totalHexagons;
+		this.moveHistory = new ArrayList<>();
+		this.iterations = 0;
 	}
 }

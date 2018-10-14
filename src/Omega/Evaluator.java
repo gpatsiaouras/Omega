@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Evaluator {
 
-	private static final int[][] NEIGHBORS = {
+	public static final int[][] NEIGHBORS = {
 			{-1, 0, 1}, {1, 0, -1}, {-1, 1, 0}, {0, 1, -1}, {1, -1, 0}, {0, -1, 1}
 	};
 
