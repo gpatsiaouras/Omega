@@ -7,7 +7,6 @@ import java.util.*;
 
 import static Omega.Evaluator.NEIGHBORS;
 import static Omega.ui.Hexagon.BLACK;
-import static Omega.ui.Hexagon.NOT_COVERED;
 import static Omega.ui.Hexagon.WHITE;
 
 //TODO Union find should be implemented only once. Make it more abstract
@@ -19,7 +18,6 @@ public class CheapBoard {
 	private int[] parent;
 	private int[] size;
 	private int[][] neighbors;
-	private int lastMove = -1;
 
 	public CheapBoard(CheapBoard cheapBoard) {
 		this.board = cheapBoard.board.clone();
@@ -28,7 +26,6 @@ public class CheapBoard {
 		this.size = new int[board.length];
 		this.hexagonMap = cheapBoard.hexagonMap;
 		this.indexToObjectHexagons = cheapBoard.indexToObjectHexagons;
-		this.lastMove = -1;
 	}
 
 	public CheapBoard(Board board) {
@@ -151,7 +148,6 @@ public class CheapBoard {
 
 	public CheapBoard successor(int child, int nextColor) {
 		board[child] = nextColor;
-		lastMove = child;
 
 		return this;
 	}
