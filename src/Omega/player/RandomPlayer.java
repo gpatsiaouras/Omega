@@ -4,6 +4,8 @@ import Omega.Game;
 import Omega.Move;
 import Omega.ui.Hexagon;
 
+import java.util.Random;
+
 public class RandomPlayer extends Player {
 
 	public RandomPlayer(int number, String name) {
@@ -14,15 +16,16 @@ public class RandomPlayer extends Player {
 	public Move makeMove(Game game) {
 		Move move = new Move();
 		move.setPlayer(this);
-		for (Hexagon current : game.getBoard().getHexagons()) {
-			if (move.getWhiteHexagon() != null && move.getBlackHexagon() != null) break;
-			if (!current.isCovered()) {
+		Random random = new Random();
+		while (move.getWhiteHexagon() == null || move.getBlackHexagon() == null) {
+			Hexagon randomHexagon = game.getBoard().getHexagons().get(random.nextInt(game.getBoard().getHexagons().size()));
+			if (!randomHexagon.isCovered()) {
 				if (move.getWhiteHexagon() == null) {
-					current.coverWithWhite();
-					move.setWhiteHexagon(current);
+					randomHexagon.coverWithWhite();
+					move.setWhiteHexagon(randomHexagon);
 				} else if (move.getWhiteHexagon() != null) {
-					current.coverWithBlack();
-					move.setBlackHexagon(current);
+					randomHexagon.coverWithBlack();
+					move.setBlackHexagon(randomHexagon);
 				}
 			}
 		}

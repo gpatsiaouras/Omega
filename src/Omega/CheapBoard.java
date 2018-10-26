@@ -19,8 +19,6 @@ public class CheapBoard {
 	private int[] parent;
 	private int[] size;
 	private int[][] neighbors;
-	private int lastColor;
-	private int lastPlayer;
 
 	public CheapBoard(CheapBoard cheapBoard) {
 		this.board = cheapBoard.board.clone();
@@ -29,8 +27,6 @@ public class CheapBoard {
 		this.size = new int[board.length];
 		this.hexagonMap = cheapBoard.hexagonMap;
 		this.indexToObjectHexagons = cheapBoard.indexToObjectHexagons;
-		this.lastColor = cheapBoard.lastColor;
-		this.lastPlayer = cheapBoard.lastPlayer;
 	}
 
 	public CheapBoard(Board board) {
@@ -40,8 +36,6 @@ public class CheapBoard {
 		this.indexToObjectHexagons = new HashMap<>();
 		this.parent = new int[board.getTotalHexagons()];
 		this.size = new int[board.getTotalHexagons()];
-		this.lastColor = BLACK;
-		this.lastPlayer = 1;
 
 		int index = 0;
 		for (Hexagon hexagon : board.getHexagons()) {
@@ -69,7 +63,7 @@ public class CheapBoard {
 		return Arrays.stream(board).noneMatch(hex -> hex == Hexagon.NOT_COVERED);
 	}
 
-	public long evaluate() {
+	public double evaluate() {
 		resetUnionFind();
 		//Replay the board and do unions
 		for (int i = 0; i < board.length; i++) {
@@ -83,19 +77,30 @@ public class CheapBoard {
 		}
 
 		long whiteScore = 1;
+		double whiteGroups = 0;
+		double whiteGroupsSum = 0;
 		long blackScore = 1;
+		double blackGroups = 0;
+		double blackGroupsSum = 0;
 
 		for (int index = 0; index < parent.length; index++) {
 			if (parent[index] == index) {
 				if (board[index] == WHITE) {
 					whiteScore *= size[index];
+					whiteGroupsSum += size[index];
+					whiteGroups++;
 				} else if (board[index] == BLACK) {
 					blackScore *= size[index];
+					blackGroupsSum += size[index];
+					blackGroups++;
 				}
 			}
 		}
 
-		return whiteScore - blackScore;
+		double blackAverage = blackGroupsSum / blackGroups;
+		double whiteAverage= whiteGroupsSum / whiteGroups;
+
+		return 0.2*blackScore + 0.4*blackAverage + 0.4*blackGroups - 0.2*whiteScore - 0.4*whiteAverage - 0.4*whiteGroups;
 	}
 
 	private void resetUnionFind() {
@@ -143,27 +148,27 @@ public class CheapBoard {
 		System.out.println("]");
 	}
 
-	public List<Integer> getSuccessors() {
-		List<Integer> successors = new ArrayList<>();
-		for (int index = 0; index < board.length; index++) {
-			if (board[index] == Hexagon.NOT_COVERED) successors.add(index);
+	//Each string inside the list will contain the white and black move(index) seperated by comma (,) .e.g 4-1
+	public List<String> getSuccessors() {
+		List<String> successors = new ArrayList<>();
+		for (int whiteIndex = 0; whiteIndex < board.length; whiteIndex++) {
+			for (int blackIndex = 0; blackIndex < board.length; blackIndex++) {
+				if (whiteIndex != blackIndex && board[whiteIndex] == Hexagon.NOT_COVERED && board[blackIndex] == Hexagon.NOT_COVERED) {
+					successors.add(whiteIndex+","+blackIndex);
+				}
+			}
 		}
-
+		//This is the magic. Shuffle the "braches" before returning
+		Collections.shuffle(successors);
+		
 		return successors;
 	}
 
-	public CheapBoard successor(int child) {
-		lastColor  = getNextColor();
-		board[child] = lastColor;
+	public CheapBoard successor(String child) {
+		String[] indexes = child.split(",");
+		board[Integer.parseInt(indexes[0])] = WHITE;
+		board[Integer.parseInt(indexes[1])] = BLACK;
 
 		return this;
-	}
-
-	private int getNextColor() {
-		return lastColor == 1 ? 2 : 1;
-	}
-
-	public int getLastColor() {
-		return lastColor;
 	}
 }

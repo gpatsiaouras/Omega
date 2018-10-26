@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import static javafx.application.Platform.exit;
@@ -44,10 +45,10 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void newGame() {
-		this.board = new Board(9);
+		this.board = new Board(7);
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new HumanPlayer(1, "Juanita");
+		this.player1 = new AIPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -165,7 +166,31 @@ public class Game implements EventHandler<MouseEvent> {
 	private void gameOver() {
 		Score score =  evaluator.calculateScore();
 		score.printScores();
+
+		Stage stage = new Stage();
+		stage.setTitle("GAME OVER");
+
+		Text text = new Text();
+		text.setText(
+				player1.getName() + " had a score of " + score.getWhiteScore() + "\n" +
+				player2.getName() + " had a score of " + score.getBlackScore() + "\n\n" +
+						(score.getWhiteScore() > score.getBlackScore() ? player1.getName() : player2.getName()) + "\tWINS"
+		);
+		text.setWrappingWidth(300.0);
+		text.setTextAlignment(TextAlignment.CENTER);
+
+		Button closeButton = new Button();
+		closeButton.setText("Close");
+		closeButton.setOnAction(b -> stage.close());
+
+		VBox vbox = new VBox();
+		vbox.getChildren().addAll(text, closeButton);
+		vbox.setAlignment(Pos.CENTER);
+		vbox.setSpacing(30.0);
+		stage.setScene(new Scene(vbox, 300, 200));
+		stage.showAndWait();
 		System.out.println("Number of groups on board: " + evaluator.getGroups());
+
 	}
 
 	public Board getBoard() {
@@ -187,7 +212,7 @@ public class Game implements EventHandler<MouseEvent> {
 			Stage stage = new Stage();
 			stage.setTitle("About this Game");
 			Text text = new Text();
-			text.setText("This is game is made by Giorgos hehehehehehehehehehehehheheheheheheh");
+			text.setText("This game is made by Giorgos. It's not the best. But it's not the worst ;)");
 			text.setWrappingWidth(300.0);
 			StackPane stackPane = new StackPane();
 			stackPane.getChildren().add(text);
