@@ -7,6 +7,7 @@ import java.util.*;
 
 import static Omega.Evaluator.NEIGHBORS;
 import static Omega.ui.Hexagon.BLACK;
+import static Omega.ui.Hexagon.NOT_COVERED;
 import static Omega.ui.Hexagon.WHITE;
 
 //TODO Union find should be implemented only once. Make it more abstract
@@ -18,6 +19,8 @@ public class CheapBoard {
 	private int[] parent;
 	private int[] size;
 	private int[][] neighbors;
+	private int lastColor;
+	private int lastPlayer;
 
 	public CheapBoard(CheapBoard cheapBoard) {
 		this.board = cheapBoard.board.clone();
@@ -26,6 +29,8 @@ public class CheapBoard {
 		this.size = new int[board.length];
 		this.hexagonMap = cheapBoard.hexagonMap;
 		this.indexToObjectHexagons = cheapBoard.indexToObjectHexagons;
+		this.lastColor = cheapBoard.lastColor;
+		this.lastPlayer = cheapBoard.lastPlayer;
 	}
 
 	public CheapBoard(Board board) {
@@ -35,6 +40,8 @@ public class CheapBoard {
 		this.indexToObjectHexagons = new HashMap<>();
 		this.parent = new int[board.getTotalHexagons()];
 		this.size = new int[board.getTotalHexagons()];
+		this.lastColor = BLACK;
+		this.lastPlayer = 1;
 
 		int index = 0;
 		for (Hexagon hexagon : board.getHexagons()) {
@@ -62,13 +69,15 @@ public class CheapBoard {
 		return Arrays.stream(board).noneMatch(hex -> hex == Hexagon.NOT_COVERED);
 	}
 
-	public long evaluate(int playerNumber) {
+	public long evaluate() {
 		resetUnionFind();
 		//Replay the board and do unions
 		for (int i = 0; i < board.length; i++) {
-			for (int nei = 0; nei < neighbors[i].length; nei++) {
-				if (board[i] == board[nei] && !connected(i, nei)) {
-					union(i, nei);
+			if (board[i] != NOT_COVERED) {
+				for (int nei : neighbors[i]) {
+					if (nei != -1 && board[i] == board[ nei] && !connected(i, nei)) {
+						union(i, nei);
+					}
 				}
 			}
 		}
@@ -85,11 +94,8 @@ public class CheapBoard {
 				}
 			}
 		}
-		long score;
-		if (playerNumber == 1) score = whiteScore/blackScore;
-		else score = blackScore/whiteScore;
 
-		return score;
+		return whiteScore - blackScore;
 	}
 
 	private void resetUnionFind() {
@@ -146,9 +152,18 @@ public class CheapBoard {
 		return successors;
 	}
 
-	public CheapBoard successor(int child, int nextColor) {
-		board[child] = nextColor;
+	public CheapBoard successor(int child) {
+		lastColor  = getNextColor();
+		board[child] = lastColor;
 
 		return this;
+	}
+
+	private int getNextColor() {
+		return lastColor == 1 ? 2 : 1;
+	}
+
+	public int getLastColor() {
+		return lastColor;
 	}
 }

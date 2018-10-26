@@ -3,6 +3,7 @@ package Omega;
 import Omega.player.AIPlayer;
 import Omega.player.HumanPlayer;
 import Omega.player.Player;
+import Omega.player.RandomPlayer;
 import Omega.ui.Board;
 import Omega.ui.Grid;
 import Omega.ui.Hexagon;
@@ -43,10 +44,10 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void newGame() {
-		this.board = new Board(7);
+		this.board = new Board(9);
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new AIPlayer(1, "Juanita");
+		this.player1 = new HumanPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -104,7 +105,7 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void continueGame() {
-		if (!board.isFull() && currentPlayer instanceof AIPlayer) {
+		if (!board.isFull() && (currentPlayer instanceof AIPlayer || currentPlayer instanceof RandomPlayer)) {
 			Platform.runLater(
 					() -> {
 						playMove(currentPlayer.makeMove(this));
