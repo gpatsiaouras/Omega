@@ -34,10 +34,10 @@ public class Game implements EventHandler<MouseEvent> {
 	private Player currentPlayer;
 
 	private ListView<Move> moveList;
+	private ObservableList<Move> observableList;
+
 	private Move currentMove;
 	private Evaluator evaluator;
-
-	private ObservableList<Move> observableList;
 
 	public Game(Stage primaryStage) {
 		newGame();
@@ -48,8 +48,8 @@ public class Game implements EventHandler<MouseEvent> {
 		this.board = new Board(9);//Size is the middle horizontal line of an omega board. Size 9 is a 5x5x5 board
 		this.board.generateHexagonsGrid();
 
-		//Change HumanPlayer to RandomPlayer or AIPlayer
-		this.player1 = new HumanPlayer(1, "Juanita");
+		//Change HumanPlayer to RandomPlayer
+		this.player1 = new RandomPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -125,6 +125,7 @@ public class Game implements EventHandler<MouseEvent> {
 		System.out.println(board.getIterations() + ":\t" + currentMove.toString());
 		//Add move to the list on the ui under the board
 		observableList.add(currentMove);
+		Platform.runLater(() -> moveList.scrollTo(observableList.size() - 1));
 		//Add move to the board moves history
 		board.addMoveToBoard(currentMove);
 		//Evaluate the board
@@ -154,7 +155,7 @@ public class Game implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		Hexagon hexagonClicked = (Hexagon) event.getTarget();
-		if (currentPlayer instanceof AIPlayer) return;
+		if (currentPlayer instanceof AIPlayer || currentPlayer instanceof RandomPlayer) return;
 		if (!hexagonClicked.isCovered() && !board.isFull()) {
 			//If we are not in the middle of a move. Then this hexagon is the first of the move a.k.a white
 			if (currentMove == null) {
@@ -172,7 +173,7 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void gameOver() {
-		Score score =  evaluator.calculateScore();
+		Score score = evaluator.calculateScore();
 		score.printScores();
 
 		Stage stage = new Stage();
@@ -181,7 +182,7 @@ public class Game implements EventHandler<MouseEvent> {
 		Text text = new Text();
 		text.setText(
 				player1.getName() + " had a score of " + score.getWhiteScore() + "\n" +
-				player2.getName() + " had a score of " + score.getBlackScore() + "\n\n" +
+						player2.getName() + " had a score of " + score.getBlackScore() + "\n\n" +
 						(score.getWhiteScore() > score.getBlackScore() ? player1.getName() : player2.getName()) + "\tWINS"
 		);
 		text.setWrappingWidth(300.0);
