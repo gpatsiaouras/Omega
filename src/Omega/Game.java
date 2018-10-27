@@ -1,11 +1,10 @@
 package Omega;
 
 import Omega.player.AIPlayer;
-import Omega.player.HumanPlayer;
 import Omega.player.Player;
 import Omega.player.RandomPlayer;
 import Omega.ui.Board;
-import Omega.ui.Grid;
+import Omega.ui.UIBoard;
 import Omega.ui.Hexagon;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -66,7 +65,7 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void startUI(Stage primaryStage) {
-		Grid grid = new Grid();
+		UIBoard UIBoard = new UIBoard();
 
 		VBox rootBox = new VBox();
 		HBox buttonsBox = new HBox();
@@ -88,7 +87,7 @@ public class Game implements EventHandler<MouseEvent> {
 
 		StackPane stackPane = new StackPane();
 		stackPane.setAlignment(Pos.CENTER);
-		stackPane.getChildren().add(grid.getGridOfHexagonsInPosition(this));
+		stackPane.getChildren().add(UIBoard.getGridOfHexagonsInPosition(this));
 
 		moveList = new ListView<>();
 		observableList = FXCollections.observableArrayList();

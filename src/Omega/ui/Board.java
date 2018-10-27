@@ -27,7 +27,7 @@ public class Board {
 	}
 
 	/**
-	 * Generate a new Grid for the board in the UI,
+	 * Generate a new UIBoard for the board in the UI,
 	 * Consider as "size" the middle horizontal line of a hexagon structure.
 	 */
 	public void generateHexagonsGrid() {

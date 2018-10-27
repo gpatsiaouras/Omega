@@ -4,7 +4,7 @@ import Omega.Game;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
-public class Grid {
+public class UIBoard {
 
 	public static final int BASE_SIZE = 10;
 
