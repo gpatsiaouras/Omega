@@ -17,7 +17,7 @@ public class RandomPlayer extends Player {
 		Move move = new Move();
 		move.setPlayer(this);
 		Random random = new Random();
-		while (move.getWhiteHexagon() == null || move.getBlackHexagon() == null) {
+		while (whiteAndBlackMovesAreNotSelected(move)) {
 			Hexagon randomHexagon = game.getBoard().getHexagons().get(random.nextInt(game.getBoard().getHexagons().size()));
 			if (!randomHexagon.isCovered()) {
 				if (move.getWhiteHexagon() == null) {
@@ -31,5 +31,9 @@ public class RandomPlayer extends Player {
 		}
 
 		return move;
+	}
+
+	private boolean whiteAndBlackMovesAreNotSelected(Move move) {
+		return move.getWhiteHexagon() == null || move.getBlackHexagon() == null;
 	}
 }

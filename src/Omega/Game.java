@@ -45,10 +45,11 @@ public class Game implements EventHandler<MouseEvent> {
 	}
 
 	private void newGame() {
-		this.board = new Board(7);
+		this.board = new Board(9);//Size is the middle horizontal line of an omega board. Size 9 is a 5x5x5 board
 		this.board.generateHexagonsGrid();
 
-		this.player1 = new AIPlayer(1, "Juanita");
+		//Change HumanPlayer to RandomPlayer or AIPlayer
+		this.player1 = new HumanPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
@@ -107,6 +108,7 @@ public class Game implements EventHandler<MouseEvent> {
 
 	private void continueGame() {
 		if (!board.isFull() && (currentPlayer instanceof AIPlayer || currentPlayer instanceof RandomPlayer)) {
+			//Platform.runLater Needed for the ui to be updated correctly during the game.
 			Platform.runLater(
 					() -> {
 						playMove(currentPlayer.makeMove(this));
@@ -119,10 +121,15 @@ public class Game implements EventHandler<MouseEvent> {
 
 	public void playMove(Move currentMove) {
 		board.incrementIterations();
+		//Print information about who played the move and which move
 		System.out.println(board.getIterations() + ":\t" + currentMove.toString());
+		//Add move to the list on the ui under the board
 		observableList.add(currentMove);
+		//Add move to the board moves history
 		board.addMoveToBoard(currentMove);
+		//Evaluate the board
 		evaluator.evaluateBoard(currentMove);
+
 		swapPlayersTurn();
 
 		continueGame();
@@ -146,17 +153,18 @@ public class Game implements EventHandler<MouseEvent> {
 
 	@Override
 	public void handle(MouseEvent event) {
-		Hexagon hexagon = (Hexagon) event.getTarget();
+		Hexagon hexagonClicked = (Hexagon) event.getTarget();
 		if (currentPlayer instanceof AIPlayer) return;
-		if (!hexagon.isCovered() && !board.isFull()) {
+		if (!hexagonClicked.isCovered() && !board.isFull()) {
+			//If we are not in the middle of a move. Then this hexagon is the first of the move a.k.a white
 			if (currentMove == null) {
-				hexagon.coverWithWhite();
+				hexagonClicked.coverWithWhite();
 				currentMove = new Move();
-				currentMove.setWhiteHexagon(hexagon);
+				currentMove.setWhiteHexagon(hexagonClicked);
 				currentMove.setPlayer(currentPlayer);
 			} else {
-				hexagon.coverWithBlack();
-				currentMove.setBlackHexagon(hexagon);
+				hexagonClicked.coverWithBlack();
+				currentMove.setBlackHexagon(hexagonClicked);
 				playMove(currentMove);
 				currentMove = null;
 			}
@@ -189,8 +197,6 @@ public class Game implements EventHandler<MouseEvent> {
 		vbox.setSpacing(30.0);
 		stage.setScene(new Scene(vbox, 300, 200));
 		stage.showAndWait();
-		System.out.println("Number of groups on board: " + evaluator.getGroups());
-
 	}
 
 	public Board getBoard() {
@@ -224,9 +230,5 @@ public class Game implements EventHandler<MouseEvent> {
 
 		menuBar.getMenus().addAll(menuFile, menuHelp);
 		return menuBar;
-	}
-
-	public Evaluator getEvaluator() {
-		return evaluator;
 	}
 }

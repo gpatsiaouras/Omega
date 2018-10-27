@@ -10,7 +10,6 @@ import static Omega.ui.Hexagon.BLACK;
 import static Omega.ui.Hexagon.NOT_COVERED;
 import static Omega.ui.Hexagon.WHITE;
 
-//TODO Union find should be implemented only once. Make it more abstract
 public class CheapBoard {
 
 	private int[] board;

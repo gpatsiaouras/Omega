@@ -49,14 +49,6 @@ public class Hexagon extends Polygon {
 		return this.cover;
 	}
 
-	public void setCover(int cover) {
-		this.cover = cover;
-	}
-
-	public boolean matchesCoordinates(int regX, int regY, int regZ) {
-		return this.x == regX && this.y == regY && this.z == regZ;
-	}
-
 	public boolean isCovered() {
 		return this.cover != NOT_COVERED;
 	}

@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Evaluator {
 
+	//Using the 3-dimensional system. Neighbors can be easily calculated by taking the combinations of substracting and adding a number
+	//in each one of the dimensions each time.
 	public static final int[][] NEIGHBORS = {
 			{-1, 0, 1}, {1, 0, -1}, {-1, 1, 0}, {0, 1, -1}, {1, -1, 0}, {0, -1, 1}
 	};
@@ -16,12 +18,10 @@ public class Evaluator {
 	private int[] parent;
 	private int[] size;
 	private Hexagon[] hexagons;
-	private int groups;
 
 	public Evaluator(Board board) {
 		this.board = board;
 
-		groups = board.getTotalHexagons();
 		parent = new int[board.getTotalHexagons()];
 		size = new int[board.getTotalHexagons()];
 		hexagons = new Hexagon[board.getTotalHexagons()];
@@ -50,25 +50,24 @@ public class Evaluator {
 
 		if (root2 == root1) return;
 
-		//TODO Remove one if is useless
-		if (size[root1] > size[root2]) {
-			parent[root2] = root1;
-			size[root1] += size[root2];
-		} else if (size[root2] > size[root1]) {
+		if (size[root2] > size[root1]) {
 			parent[root1] = root2;
 			size[root2] += size[root1];
 		} else {
 			parent[root2] = root1;
 			size[root1] += size[root2];
 		}
-
-		groups--;
 	}
 
 	private boolean connected(int p, int q) {
 		return find(p) == find(q);
 	}
 
+	/**
+	 * Perform union find for the current move.
+	 * First for the white hexagon and then for the second
+	 * @param current
+	 */
 	public void evaluateBoard(Move current) {
 		evaluateHexagon(current.getWhiteHexagon());
 		evaluateHexagon(current.getBlackHexagon());
@@ -105,10 +104,6 @@ public class Evaluator {
 			if (hexagon == hexagons[i]) return i;
 		}
 		return -1;
-	}
-
-	public int getGroups() {
-		return (groups - 1);
 	}
 
 	public Score calculateScore() {
