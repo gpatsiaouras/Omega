@@ -1,6 +1,7 @@
 package Omega;
 
 import Omega.player.AIPlayer;
+import Omega.player.HumanPlayer;
 import Omega.player.Player;
 import Omega.player.RandomPlayer;
 import Omega.ui.Board;
@@ -48,7 +49,7 @@ public class Game implements EventHandler<MouseEvent> {
 		this.board.generateHexagonsGrid();
 
 		//Change HumanPlayer to RandomPlayer
-		this.player1 = new RandomPlayer(1, "Juanita");
+		this.player1 = new HumanPlayer(1, "Juanita");
 		this.player2 = new AIPlayer(2, "Fernando");
 		currentPlayer = player1;
 
